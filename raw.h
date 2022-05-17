@@ -9,7 +9,7 @@
 
 #include "hget.h"
 
-using namespace raw;
+namespace raw {
 
 typedef struct {
   int directio;
@@ -286,4 +286,6 @@ off_t rawspec_raw_read_header(int fd, rawspec_raw_hdr_t * raw_hdr)
   //printf("RRP: seek=%ld\n", pos);
 
   return pos;
+}
+
 }

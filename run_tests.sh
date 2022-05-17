@@ -8,4 +8,4 @@ cmake ..
 # Compile & link
 cmake --build .
 
-./build/run_tests
+./tests
