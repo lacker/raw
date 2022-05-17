@@ -40,8 +40,8 @@ int32_t rawspec_raw_get_s32(const char * buf, const char * key, int32_t def)
 {
   char tmpstr[48];
   int32_t value;
-  if (hgeti4(buf, key, &value) == 0) {
-    if (hgets(buf, key, 48, tmpstr) == 0) {
+  if (libwcs::hgeti4(buf, key, &value) == 0) {
+    if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
       value = def;
     } else {
       value = strtol(tmpstr, NULL, 0);
@@ -55,8 +55,8 @@ uint32_t rawspec_raw_get_u32(const char * buf, const char * key, uint32_t def)
 {
   char tmpstr[48];
   uint32_t value;
-  if (hgetu4(buf, key, &value) == 0) {
-    if (hgets(buf, key, 48, tmpstr) == 0) {
+  if (libwcs::hgetu4(buf, key, &value) == 0) {
+    if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
       value = def;
     } else {
       value = strtoul(tmpstr, NULL, 0);
@@ -66,12 +66,13 @@ uint32_t rawspec_raw_get_u32(const char * buf, const char * key, uint32_t def)
   return value;
 }
 
+/* Doesn't compile, g++ complains about mismatched int types.
 int64_t rawspec_raw_get_s64(const char * buf, const char * key, int64_t def)
 {
   char tmpstr[48];
   int64_t value;
-  if (hgeti8(buf, key, &value) == 0) {
-    if (hgets(buf, key, 48, tmpstr) == 0) {
+  if (libwcs::hgeti8(buf, key, &value) == 0) {
+    if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
       value = def;
     } else {
       value = strtoll(tmpstr, NULL, 0);
@@ -80,13 +81,14 @@ int64_t rawspec_raw_get_s64(const char * buf, const char * key, int64_t def)
 
   return value;
 }
+*/
 
 uint64_t rawspec_raw_get_u64(const char * buf, const char * key, uint64_t def)
 {
   char tmpstr[48];
   uint64_t value;
-  if (hgetu8(buf, key, &value) == 0) {
-    if (hgets(buf, key, 48, tmpstr) == 0) {
+  if (libwcs::hgetu8(buf, key, &value) == 0) {
+    if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
       value = def;
     } else {
       value = strtoull(tmpstr, NULL, 0);
@@ -100,8 +102,8 @@ double rawspec_raw_get_dbl(const char * buf, const char * key, double def)
 {
   char tmpstr[48];
   double value;
-  if (hgetr8(buf, key, &value) == 0) {
-    if (hgets(buf, key, 48, tmpstr) == 0) {
+  if (libwcs::hgetr8(buf, key, &value) == 0) {
+    if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
       value = def;
     } else {
       value = strtod(tmpstr, NULL);
@@ -114,7 +116,7 @@ double rawspec_raw_get_dbl(const char * buf, const char * key, double def)
 void rawspec_raw_get_str(const char * buf, const char * key, const char * def,
                  char * out, size_t len)
 {
-  if (hgets(buf, key, len, out) == 0) {
+  if (libwcs::hgets(buf, key, len, out) == 0) {
     strncpy(out, def, len);
     out[len-1] = '\0';
   }
@@ -180,6 +182,8 @@ int rawspec_raw_header_size(char * hdr, size_t len, int directio)
   return 0;
 }
 
+#define rawspec_raw_hmsstr_to_h(hmsstr) (rawspec_raw_dmsstr_to_d(hmsstr))
+ 
 // Parses rawspec related RAW header params from buf into raw_hdr.
 void rawspec_raw_parse_header(const char * buf, rawspec_raw_hdr_t * raw_hdr)
 {
