@@ -10,3 +10,8 @@ To run the tests:
 ```
 ./run_tests.sh
 ```
+
+## random notes
+
+This code replaces every `npol=4` header with `npol=2`, due to ancient tradition. I'm not sure
+if this is the right thing to do.

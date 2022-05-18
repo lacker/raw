@@ -271,6 +271,10 @@ off_t rawspec_raw_read_header(int fd, rawspec_raw_hdr_t * raw_hdr)
     fprintf(stderr, "PKTIDX not found in header\n");
     return -1;
   }
+
+  // TODO(lacker) - I am suspicious of this code.
+  // Figure out what the right thing to do with this npol=4 data is.
+  
   // 4 is the number of possible cross pol products
   if(raw_hdr->npol == 4) {
     // 2 is the actual number of polarizations present
