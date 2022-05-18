@@ -182,8 +182,6 @@ int rawspec_raw_header_size(char * hdr, size_t len, int directio)
   return 0;
 }
 
-#define rawspec_raw_hmsstr_to_h(hmsstr) (rawspec_raw_dmsstr_to_d(hmsstr))
- 
 // Parses rawspec related RAW header params from buf into raw_hdr.
 void rawspec_raw_parse_header(const char * buf, rawspec_raw_hdr_t * raw_hdr)
 {
@@ -205,7 +203,7 @@ void rawspec_raw_parse_header(const char * buf, rawspec_raw_hdr_t * raw_hdr)
   raw_hdr->nants    = rawspec_raw_get_u32(buf, "NANTS",    1);
 
   rawspec_raw_get_str(buf, "RA_STR", "0.0", tmp, 80);
-  raw_hdr->ra = rawspec_raw_hmsstr_to_h(tmp);
+  raw_hdr->ra = rawspec_raw_dmsstr_to_d(tmp);
 
   rawspec_raw_get_str(buf, "DEC_STR", "0.0", tmp, 80);
   raw_hdr->dec = rawspec_raw_dmsstr_to_d(tmp);
