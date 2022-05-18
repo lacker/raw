@@ -54,8 +54,8 @@ bool process(const string& filename, int fdin) {
     exit(1);
   }
 
-  if (raw_hdr.nbits == 4) {
-    cerr << "the raw library currently does not handle 4-to-8-bit expansion\n";
+  if (raw_hdr.nbits != 8) {
+    cerr << "the raw library can currently only handle nbits = 8\n";
     exit(1);
   }
   
