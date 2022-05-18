@@ -9,7 +9,7 @@ using namespace std;
 // Reads `bytes_to_read` bytes from `fd` into the buffer pointed to by `buf`.
 // Returns the total bytes read or -1 on error.  A non-negative return value
 // will be less than `bytes_to_read` only of EOF is reached.
-ssize_t read_fully(int fd, void * buf, size_t bytes_to_read)
+ssize_t read_fully(int fd, char* buf, size_t bytes_to_read)
 {
   ssize_t bytes_read;
   ssize_t total_bytes_read = 0;
