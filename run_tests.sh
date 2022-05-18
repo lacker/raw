@@ -15,3 +15,5 @@ if [ ! -f "$TESTFILE" ]; then
 fi
 
 ./tests $TESTFILE
+
+
