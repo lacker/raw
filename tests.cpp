@@ -6,5 +6,10 @@ using namespace std;
 
 // Just runs some tests
 int main(int argc, char* argv[]) {
-  cout << "hello raw testing world" << endl;
+  if (argc != 2) {
+    cerr << "usage: tests <file.raw>\n";
+    exit(1);
+  }
+  string filename(argv[1]);
+  cout << "hello raw testing world " << filename << endl;
 }
