@@ -35,6 +35,15 @@ int main(int argc, char* argv[]) {
     cerr << "bad obsnchan/nants: " << raw_hdr.obsnchan << " % " << raw_hdr.nants << " != 0\n";
     exit(1);
   }
+
+  // Validate block dimensions
+  int divisor = 2 * raw_hdr.npol * raw_hdr.obsnchan * raw_hdr.nbits / 8;
+  if (raw_hdr.blocsize % divisor != 0) {
+    cerr << "invalid block dimensions: blocsize " << raw_hdr.blocsize << " is not divisible by " << divisor << endl;
+    exit(1);
+  }
+  int num_time_samples_per_block = raw_hdr.blocsize / divisor;
+  cout << "ntpb " << num_time_samples_per_block << endl;
   
   close(fdin);
   cout << "OK" << endl;
