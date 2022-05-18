@@ -14,6 +14,6 @@ if [ ! -f "$TESTFILE" ]; then
     exit 1
 fi
 
-./tests $TESTFILE
+time ./tests $TESTFILE
 
 
