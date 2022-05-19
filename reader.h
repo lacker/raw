@@ -26,12 +26,17 @@ namespace raw {
     // The amount that fdin is offset from the start of our current block.
     // Set to 0 before we have read any blocks
     int current_block_offset;
-    
+
+    // The pktidx from the current block.
+    // Set to 0 before we have read any blocks
+    int64_t pktidx;
+
   public:
 
     std::string filename;
     
-    Reader(const std::string& filename) : headers_read(0), current_block_size(0), current_block_offset(0), filename(filename) {
+    Reader(const std::string& filename)
+      : headers_read(0), current_block_size(0), current_block_offset(0), pktidx(0), filename(filename) {
       fdin = open(filename.c_str(), O_RDONLY);
       posix_fadvise(fdin, 0, 0, POSIX_FADV_SEQUENTIAL);
     }
@@ -47,9 +52,8 @@ namespace raw {
       if (headers_read > 0) {
 	// We may have to advance fdin to get to the next block.
 	int advance = current_block_size - current_block_offset;
-	if (advance > 0) {
-	  std::cerr << "TODO: handle pre-readHeader advance\n";
-	  exit(1);
+	if (advance != 0) {
+	  lseek(fdin, advance, SEEK_CUR);
 	}
       }
       
@@ -84,6 +88,13 @@ namespace raw {
 	exit(1);
       }
 
+      if (headers_read > 0) {
+	header->missing_blocks = pktidx - header->pktidx - 1;
+      } else {
+	header->missing_blocks = 0;
+      }
+      pktidx = header->pktidx;
+      
       header->num_timesteps = header->blocsize / bytes_per_timestep;
       current_block_size = header->blocsize;
       current_block_offset = 0;

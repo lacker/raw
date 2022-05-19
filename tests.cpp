@@ -19,8 +19,11 @@ int main(int argc, char* argv[]) {
   raw::Reader reader(filename);
   raw::Header header;
   while (reader.readHeader(&header)) {
-    std::vector<char> data(header.blocsize);
-    reader.readData(data.data());
+    // Read only the odd blocks
+    if (num_blocks % 2 == 1) {
+      std::vector<char> data(header.blocsize);
+      reader.readData(data.data());
+    }
 
     ++num_blocks;
     if (num_blocks % 10 == 0) {
