@@ -162,7 +162,7 @@ int rawspec_raw_header_size(char * hdr, size_t len, int directio)
 }
 
 // Parses rawspec related RAW header params from buf into raw_hdr.
-void rawspec_raw_parse_header(const char * buf, rawspec_raw_hdr_t * raw_hdr)
+void rawspec_raw_parse_header(const char* buf, Header* raw_hdr)
 {
   int smjd;
   int imjd;
@@ -200,7 +200,7 @@ void rawspec_raw_parse_header(const char * buf, rawspec_raw_hdr_t * raw_hdr)
 // of the subsequent data block and the file descriptor `fd` will also refer to
 // that location in the file.  On EOF, this function returns 0.  On failure,
 // this function returns -1 and the location to which fd refers is undefined.
-off_t rawspec_raw_read_header(int fd, rawspec_raw_hdr_t * raw_hdr)
+off_t rawspec_raw_read_header(int fd, Header* raw_hdr)
 {
   int i;
   // Ensure that hdr is aligned to a 512-byte boundary so that it can be used

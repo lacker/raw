@@ -36,7 +36,7 @@ ssize_t read_fully(int fd, char* buf, size_t bytes_to_read)
 // Returns false if we're at the end of the file.
 // Exits if we run into any one of a number of errors.
 bool process(const string& filename, int fdin) {
-  raw::rawspec_raw_hdr_t raw_hdr;
+  raw::Header raw_hdr;
   auto pos = rawspec_raw_read_header(fdin, &raw_hdr);
   if (pos <= 0) {
     if (pos == -1) {
