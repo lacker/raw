@@ -59,25 +59,15 @@ bool process(const string& filename, int fdin) {
     exit(1);
   }
   
-  // Validate block dimensions
-  int bytes_per_time_sample = 2 * raw_hdr.npol * raw_hdr.obsnchan * raw_hdr.nbits / 8;
-  if (raw_hdr.blocsize % bytes_per_time_sample != 0) {
-    cerr << "invalid block dimensions: blocsize " << raw_hdr.blocsize << " is not divisible by " << bytes_per_time_sample << endl;
+  // Validate block dimensions.
+  // The 2 is because we store both real and complex values.
+  int bits_per_timestep = 2 * raw_hdr.npol * raw_hdr.obsnchan * raw_hdr.nbits;
+  int bytes_per_timestep = bits_per_timestep / 8;
+  if (raw_hdr.blocsize % bytes_per_timestep != 0) {
+    cerr << "invalid block dimensions: blocsize " << raw_hdr.blocsize << " is not divisible by " << bytes_per_timestep << endl;
     exit(1);
   }
-  int num_time_samples_per_block = raw_hdr.blocsize / bytes_per_time_sample;
-  // cout << "ntpb " << num_time_samples_per_block << endl;
-
-  /*
-  cerr << "BLOCSIZE = " << raw_hdr.blocsize << endl;
-  cerr << "OBSNCHAN = " << raw_hdr.obsnchan << endl;
-  cerr << "NANTS    = " << raw_hdr.nants << endl;
-  cerr << "NBITS    = " << raw_hdr.nbits << endl;
-  cerr << "NPOL     = " << raw_hdr.npol << endl;
-  cerr << "OBSFREQ  = " << raw_hdr.obsfreq << endl;
-  cerr << "OBSBW    = " << raw_hdr.obsbw << endl;
-  cerr << "TBIN     = " << raw_hdr.tbin << endl;
-  */
+  int num_timesteps = raw_hdr.blocsize / bytes_per_timestep;
 
   vector<char> data(raw_hdr.blocsize);
   auto bytes_read = read_fully(fdin, data.data(), data.size());
