@@ -15,6 +15,17 @@ namespace raw {
    
    Most of the fields of the Header map directly to FITS headers. Some of them are auxiliary information
    generated during the parsing process.
+
+   You will need the data from headers to handle the data in each block. The format of the block is a three-dimensional
+   row-major array, indexed by:
+
+   data[frequency][time][polarity]
+
+   where the dimensions are in the fields:
+     obsnchan, num_timesteps, npol
+
+   Each entry is 2*nbits bits, and for now we only support nbits=8, so it's two bytes. The first byte is real and the
+   second byte is complex.
   */
   typedef struct {
     int directio;
@@ -41,18 +52,15 @@ namespace raw {
     int64_t pktidx;
 
     // The "OBSFREQ" FITS header.
-    // This is the center frequency of the entire range of frequencies stored in the file.
-    // TODO: what units is this in?
+    // This is the center frequency of the entire range of frequencies stored in the file, in MHz.
     double obsfreq;
 
     // The "OBSBW" FITS header.
-    // This is the width of the range of frequencies. Negative indicates a reversed frequency axis.
-    // TODO: what units is this in?
+    // This is the width of the range of frequencies, in MHz. Negative indicates a reversed frequency axis.
     double obsbw;
 
     // The "TBIN" FITS header.
-    // This is the time resolution for the data.
-    // TODO: what units is this in?
+    // This is the time resolution for the data, in seconds. So, seconds per timestep.
     double tbin;
 
     // The right ascension of the telescope, in hours.
@@ -78,6 +86,7 @@ namespace raw {
     // The "NANTS" FITS header.
     // This is the number of antennas in the data.
     // TODO: how do antennas relate to the data layout?
+    // TODO: does this have the same meaning for interferometers?
     unsigned int nants;
 
     // The "SRC_NAME" FITS header.
