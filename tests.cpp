@@ -36,8 +36,8 @@ ssize_t read_fully(int fd, char* buf, size_t bytes_to_read)
 // Returns false if we're at the end of the file.
 // Exits if we run into any one of a number of errors.
 bool process(const string& filename, int fdin) {
-  raw::Header raw_hdr;
-  auto pos = rawspec_raw_read_header(fdin, &raw_hdr);
+  raw::Header header;
+  auto pos = rawspec_raw_read_header(fdin, &header);
   if (pos <= 0) {
     if (pos == -1) {
       cerr << "error getting obs params from " << filename << "\n";
@@ -49,27 +49,27 @@ bool process(const string& filename, int fdin) {
   }
 
   // Verify that obsnchan is divisible by nants
-  if (raw_hdr.obsnchan % raw_hdr.nants != 0) {
-    cerr << "bad obsnchan/nants: " << raw_hdr.obsnchan << " % " << raw_hdr.nants << " != 0\n";
+  if (header.obsnchan % header.nants != 0) {
+    cerr << "bad obsnchan/nants: " << header.obsnchan << " % " << header.nants << " != 0\n";
     exit(1);
   }
 
-  if (raw_hdr.nbits != 8) {
+  if (header.nbits != 8) {
     cerr << "the raw library can currently only handle nbits = 8\n";
     exit(1);
   }
   
   // Validate block dimensions.
   // The 2 is because we store both real and complex values.
-  int bits_per_timestep = 2 * raw_hdr.npol * raw_hdr.obsnchan * raw_hdr.nbits;
+  int bits_per_timestep = 2 * header.npol * header.obsnchan * header.nbits;
   int bytes_per_timestep = bits_per_timestep / 8;
-  if (raw_hdr.blocsize % bytes_per_timestep != 0) {
-    cerr << "invalid block dimensions: blocsize " << raw_hdr.blocsize << " is not divisible by " << bytes_per_timestep << endl;
+  if (header.blocsize % bytes_per_timestep != 0) {
+    cerr << "invalid block dimensions: blocsize " << header.blocsize << " is not divisible by " << bytes_per_timestep << endl;
     exit(1);
   }
-  int num_timesteps = raw_hdr.blocsize / bytes_per_timestep;
+  int num_timesteps = header.blocsize / bytes_per_timestep;
 
-  vector<char> data(raw_hdr.blocsize);
+  vector<char> data(header.blocsize);
   auto bytes_read = read_fully(fdin, data.data(), data.size());
   if (bytes_read < 0) {
     cerr << "error while reading file\n";

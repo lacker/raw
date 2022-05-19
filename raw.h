@@ -249,9 +249,7 @@ off_t rawspec_raw_read_header(int fd, Header* raw_hdr)
     return -1;
   }
 
-  // TODO(lacker) - I am suspicious of this code.
-  // Figure out what the right thing to do with this npol=4 data is.
-  
+  // TODO: Figure out why we do this.
   // 4 is the number of possible cross pol products
   if(raw_hdr->npol == 4) {
     // 2 is the actual number of polarizations present

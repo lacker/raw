@@ -60,7 +60,7 @@ namespace raw {
     // This is derived from the "RA_STR" FITS header.
     double ra;
 
-    // The declination of the telescope.
+    // The declination of the telescope, in degrees.
     // TODO: what units - degrees?
     // This is derived from the "DEC_STR" FITS header.
     double dec;
@@ -69,16 +69,33 @@ namespace raw {
     // This is synthesized from the "STT_IMJD" and "STT_SMJD" FITS headers.
     double mjd;
 
-    // TODO: keep documenting
-    int beam_id; // -1 is unknown or single beam receiver
-    int nbeam;   // -1 is unknown or single beam receiver
+    // The "BEAM_ID" FITS header.
+    // The beam id. -1 is unknown or a single beam receiver.
+    int beam_id;
+
+    // The "NBEAM" FITS header.
+    // The number of total beams. -1 is unknown or a single beam receiver.
+    int nbeam;
+
+    // The "NANTS" FITS header.
+    // This is the number of antennas in the data.
+    // TODO: how do antennas relate to the data layout?
     unsigned int nants;
+
+    // The "SRC_NAME" FITS header.
+    // The name of the current target.
     char src_name[81];
+
+    // The "TELESCOP" FITS header.
+    // The name of the telescope.
     char telescop[81];
-    off_t hdr_pos; // Offset of start of header
+
+    // The position of the start of the header in the .raw file.    
+    off_t hdr_pos;
 
     // The "HDR_SIZE" FITS header.
-    size_t hdr_size; // Size of header in bytes (not including DIRECTIO padding)
+    // The size of header in bytes, not including directio padding.
+    size_t hdr_size; 
 
     // Normally, pktidx increases by 1 each block.
     // In some cases, the process writing the .raw file doesn't write some of the blocks that it would normally.
