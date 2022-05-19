@@ -55,14 +55,12 @@ namespace raw {
     // TODO: what units is this in?
     double tbin;
 
-    // The right ascension of the telescope.
-    // TODO: what units - hours? degrees?
-    // This is derived from the "RA_STR" FITS header.
+    // The right ascension of the telescope, in hours.
+    // This is derived from the "RA_STR" FITS header which is HH:MM:SSS.ssss
     double ra;
 
     // The declination of the telescope, in degrees.
-    // TODO: what units - degrees?
-    // This is derived from the "DEC_STR" FITS header.
+    // This is derived from the "DEC_STR" FITS header which is DD:MM:SSS.ssss
     double dec;
 
     // The start time in MJD format.
@@ -103,6 +101,11 @@ namespace raw {
     // Depending on the downstream application, you might want to treat these blocks as being equivalent to all zeros, or
     // simply ignore them.
     int missing_blocks;
+
+    // The number of timesteps in the data.
+    // This isn't stored explicitly in a FITS header because we can calculate it from the other metadata,
+    // but it's useful so we include it here.
+    int num_timesteps;
   } Header;
 
 }

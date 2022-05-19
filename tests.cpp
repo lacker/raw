@@ -15,10 +15,13 @@ int main(int argc, char* argv[]) {
   string filename(argv[1]);
   cout << "running tests on " << filename << endl;
 
-  raw::Reader reader(filename);
-
   int num_blocks = 0;
-  while (reader.process()) {
+  raw::Reader reader(filename);
+  raw::Header header;
+  while (reader.readHeader(&header)) {
+    std::vector<char> data(header.blocsize);
+    reader.readData(data.data());
+
     ++num_blocks;
     if (num_blocks % 10 == 0) {
       cout << "processed " << num_blocks << " blocks\n";
