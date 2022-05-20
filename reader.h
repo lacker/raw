@@ -73,6 +73,7 @@ namespace raw {
 	std::cerr << "bad obsnchan/nants: " << header->obsnchan << " % " << header->nants << " != 0\n";
 	exit(1);
       }
+      header->num_freqs = header->obsnchan / header->nants;
 
       if (header->nbits != 8) {
 	std::cerr << "the raw library can currently only handle nbits = 8\n";

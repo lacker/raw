@@ -256,11 +256,10 @@ namespace raw {
       raw_hdr->npol = 2;
     }
 
-    // Save header pos/size
-    raw_hdr->hdr_pos = pos;
+    // Save the header size with no padding
     raw_hdr->hdr_size = rawspec_raw_header_size(hdr, hdr_size, 0);
 
-    // Get actual size of header (plus any padding)
+    // Get size of header plus padding
     hdr_size = rawspec_raw_header_size(hdr, hdr_size, raw_hdr->directio);
     //printf("RRP: hdr=%lu\n", hdr_size);
 

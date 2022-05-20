@@ -103,7 +103,6 @@ typedef unsigned long long uint8;
 #error cannot determine 8 byte integer type
 #endif
   
-  // XXX
   char *ksearch (const char* hstring, const char* keyword);
   char* hgetc (const char* hstring, const char* keyword0);
   int hgeti4c (const char* hstring, const char* keyword, const char* wchar, int *ival);
