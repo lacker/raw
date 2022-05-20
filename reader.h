@@ -62,7 +62,7 @@ namespace raw {
     // subsequent data block.
     // Returns whether the read was successful.
     // If readHeader returns false, it can either be an error, or we reached the end of the file.
-    // Callers should check reader.error to see if there was an error.
+    // Callers should check reader.error() to see if there was an error.
     bool readHeader(Header* header) {
       if (error()) {
 	return false;
