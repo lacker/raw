@@ -38,6 +38,11 @@ int main(int argc, char* argv[]) {
       cout << "processed " << num_blocks << " blocks\n";
     }
   }
+
+  if (reader.error()) {
+    cout << "error: " << reader.errorMessage() << endl;
+  }
+
   cout << "done. processed " << num_blocks << " blocks total\n";
   
   cout << "OK" << endl;

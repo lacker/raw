@@ -89,14 +89,14 @@ namespace raw {
 
       // Verify that obsnchan is divisible by nants
       if (header->obsnchan % header->nants != 0) {
-	std::cerr << "bad obsnchan/nants: " << header->obsnchan << " % " << header->nants << " != 0\n";
-	exit(1);
+	err << "bad obsnchan/nants: " << header->obsnchan << " % " << header->nants << " != 0";
+	return false;
       }
       header->num_channels = header->obsnchan / header->nants;
 
       if (header->nbits != 8) {
-	std::cerr << "the raw library can currently only handle nbits = 8\n";
-	exit(1);
+	err << "the raw library can currently only handle nbits = 8";
+	return false;
       }
 
       // Validate block dimensions.
@@ -104,8 +104,8 @@ namespace raw {
       int bits_per_timestep = 2 * header->npol * header->obsnchan * header->nbits;
       int bytes_per_timestep = bits_per_timestep / 8;
       if (header->blocsize % bytes_per_timestep != 0) {
-	std::cerr << "invalid block dimensions: blocsize " << header->blocsize << " is not divisible by " << bytes_per_timestep << std::endl;
-	exit(1);
+	err << "invalid block dimensions: blocsize " << header->blocsize << " is not divisible by " << bytes_per_timestep;
+	return false;
       }
 
       if (headers_read > 0) {
@@ -123,21 +123,23 @@ namespace raw {
     }
 
     // Reads all data from the current block into the buffer, advancing fdin.
-    void readData(char* buffer) {
+    // Returns whether the read was successful.
+    bool readData(char* buffer) {
       if (current_block_offset != 0) {
-	std::cerr << "cannot readData when data from this block has already been read\n";
-	exit(1);
+	err << "cannot readData when data from this block has already been read";
+	return false;
       }
       auto bytes_read = read_fully(fdin, buffer, current_block_size);
       if (bytes_read < 0) {
-	std::cerr << "error while reading file\n";
-	exit(1);
+	err << "error while reading file";
+	return false;
       }
       if (bytes_read < current_block_size) {
-	std::cerr << "incomplete block at end of file\n";
-	exit(1);
+	std::cerr << "incomplete block at end of file";
+	return false;
       }
       current_block_offset += current_block_size;
+      return true;
     }    
   };
 }
