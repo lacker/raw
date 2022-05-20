@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "error_message.h"
 #include "header.h"
 #include "util.h"
 
@@ -31,8 +32,10 @@ namespace raw {
     // Set to 0 before we have read any blocks
     int64_t pktidx;
 
+    // Once err is used, the reader is in "error state".
+    ErrorMessage err;
+    
   public:
-
     std::string filename;
     
     Reader(const std::string& filename)
@@ -45,10 +48,26 @@ namespace raw {
       close(fdin);
     }
 
+    // Whether we have run into an error
+    bool error() {
+      return err.used;
+    }
+
+    // The string for the error message
+    std::string errorMessage() {
+      return err;
+    }
+    
     // Reads the next header, advancing the internal file descriptor to the start of the
     // subsequent data block.
-    // Returns false if we're at the end of the file so there are no more headers.
+    // Returns whether the read was successful.
+    // If readHeader returns false, it can either be an error, or we reached the end of the file.
+    // Callers should check reader.error to see if there was an error.
     bool readHeader(Header* header) {
+      if (error()) {
+	return false;
+      }
+
       if (headers_read > 0) {
 	// We may have to advance fdin to get to the next block.
 	int advance = current_block_size - current_block_offset;
@@ -59,13 +78,13 @@ namespace raw {
       
       auto pos = rawspec_raw_read_header(fdin, header);
       if (pos <= 0) {
-	if (pos == -1) {
-	  std::cerr << "error getting obs params from " << filename << "\n";
-	} else {
+	if (pos != -1) {
 	  // We're at the end of the file.
 	  return false;
 	}
-	exit(1);
+
+	err << "error getting obs params from " << filename;
+	return false;
       }      
 
       // Verify that obsnchan is divisible by nants
