@@ -25,7 +25,7 @@ namespace raw {
    data[antenna][frequency][time][polarity]
 
    where the dimensions are in the fields:
-     nants, num_freqs, num_timesteps, npol
+     nants, num_channels, num_timesteps, npol
 
    Each entry is 2*nbits bits, and for now we only support nbits=8, so
    it's two bytes. The first byte is real and the second byte is complex.
@@ -123,11 +123,13 @@ namespace raw {
     // calculate it from the other metadata, but it's useful so we include it here.
     int num_timesteps;
 
-    // The number of frequency bins in the data.
+    // The number of frequency channels in the data.
+    // These are typically "coarse channels" because we later convert into more channels.
     // This does *not* count different antennas multiple times. It
     // isn't stored explicitly in a FITS header for historical reasons
     // and is instead calculated from the other metadata.
-    int num_freqs;
+    // In particular it is different from obsnchan.
+    int num_channels;
     
   } Header;
 
