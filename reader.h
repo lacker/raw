@@ -21,28 +21,27 @@ namespace raw {
     int fdin;
 
     // How many headers have already been read from this file
-    int headers_read;
+    int headers_read = 0;
 
     // The number of bytes in the block that fdin is currently pointed at.
     // Set to 0 before we have read any blocks
-    int current_block_size;
+    int current_block_size = 0;
 
     // The amount that fdin is offset from the start of our current block.
     // Set to 0 before we have read any blocks
-    int current_block_offset;
+    int current_block_offset = 0;
 
     // The pktidx from the current block.
     // Set to 0 before we have read any blocks
-    int64_t pktidx;
+    int64_t pktidx = 0;
 
     // Once err is used, the reader is in "error state".
-    ErrorMessage err;
+    ErrorMessage err = ErrorMessage();
     
   public:
     std::string filename;
     
-    Reader(const std::string& filename)
-      : headers_read(0), current_block_size(0), current_block_offset(0), pktidx(0), filename(filename) {
+    Reader(const std::string& filename) : filename(filename) {
       fdin = open(filename.c_str(), O_RDONLY);
       posix_fadvise(fdin, 0, 0, POSIX_FADV_SEQUENTIAL);
     }

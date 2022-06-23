@@ -5,7 +5,7 @@
 namespace raw {
   struct ErrorMessage {
     bool used = false;
-    std::stringstream ss;
+    std::stringstream ss = std::stringstream();
 
     template<typename T>
     ErrorMessage& operator<<(const T &data) {
