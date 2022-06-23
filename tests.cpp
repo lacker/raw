@@ -23,6 +23,13 @@ int main(int argc, char* argv[]) {
       cout << header.missing_blocks << " missing blocks\n";
     }
 
+    if (num_blocks == 0) {
+      cout << "N_POL: " << header.npol << endl;
+      cout << "N_TIME: " << header.num_timesteps << endl;
+      cout << "N_FREQ: " << header.num_channels << endl;
+      cout << "N_ANT: " << header.nants << endl;
+    }
+    
     // Read only the odd blocks
     if (num_blocks % 2 == 1) {
       std::vector<char> data(header.blocsize);
