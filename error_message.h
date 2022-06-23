@@ -4,8 +4,9 @@
 
 namespace raw {
   struct ErrorMessage {
-    bool used;
+    bool used = false;
     std::stringstream ss;
+
     template<typename T>
     ErrorMessage& operator<<(const T &data) {
       used = true;
