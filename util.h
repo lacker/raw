@@ -78,7 +78,7 @@ namespace raw {
     return sign * d;
   }
 
-  int rawspec_raw_header_size(char * hdr, size_t len, int directio)
+  int rawspec_raw_header_size(char * hdr, int len, int directio)
   {
     int i;
 
@@ -138,7 +138,6 @@ namespace raw {
   // that location in the file.  On EOF, this function returns 0.  On failure,
   // this function returns -1 and the location to which fd refers is undefined.
   off_t rawspec_raw_read_header(int fd, Header* raw_hdr) {
-    int i;
     int hdr_size;
     off_t pos = lseek(fd, 0, SEEK_CUR);
 

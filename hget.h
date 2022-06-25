@@ -588,9 +588,9 @@ typedef unsigned long long uint8;
 
   int hgetr8 (const char* hstring, const char* keyword, double *dval)
   /*
-    const char *hstring;    /* character string containing FITS header information
+    const char *hstring;    // character string containing FITS header information
     in the format <keyword>= <value> {/ <comment>}
-    const char *keyword;    /* character string containing the name of the keyword
+    const char *keyword;    // character string containing the name of the keyword
     the value of which is returned.  hget searches for a
     line beginning with this string.  if "[n]" is present,
     the n'th token in the value is returned.
