@@ -5,7 +5,6 @@
 // Utilities ported from plain C.
 
 namespace raw {
-
   // Reads `bytes_to_read` bytes from `fd` into the buffer pointed to by `buf`.
   // Returns the total bytes read or -1 on error.  A non-negative return value
   // will be less than `bytes_to_read` only of EOF is reached.
@@ -29,10 +28,6 @@ namespace raw {
 
     return total_bytes_read;
   }
-
-
-  // Multiple of 80 and 512
-  const int MAX_RAW_HDR_SIZE = 25600;
 
   int32_t rawspec_raw_get_s32(const char * buf, const char * key, int32_t def)
   {
@@ -155,7 +150,7 @@ namespace raw {
 	i += 80;
 	// Move past any direct I/O padding
 	if(directio) {
-	  i += (MAX_RAW_HDR_SIZE - i) % 512;
+	  i += (MAX_RAW_HEADER_SIZE - i) % 512;
 	}
 	return i;
       }
@@ -203,14 +198,11 @@ namespace raw {
   // this function returns -1 and the location to which fd refers is undefined.
   off_t rawspec_raw_read_header(int fd, Header* raw_hdr) {
     int i;
-    // Ensure that hdr is aligned to a 512-byte boundary so that it can be used
-    // with files opened with O_DIRECT.
-    char hdr[MAX_RAW_HDR_SIZE] __attribute__ ((aligned (512)));
     int hdr_size;
     off_t pos = lseek(fd, 0, SEEK_CUR);
 
     // Read header (plus some data, probably)
-    hdr_size = read(fd, hdr, MAX_RAW_HDR_SIZE);
+    hdr_size = read(fd, raw_hdr->buffer, MAX_RAW_HEADER_SIZE);
 
     if(hdr_size == -1) {
       return -1;
@@ -218,7 +210,7 @@ namespace raw {
       return 0;
     }
 
-    rawspec_raw_parse_header(hdr, raw_hdr);
+    rawspec_raw_parse_header(raw_hdr->buffer, raw_hdr);
 
     if(raw_hdr->blocsize ==  0) {
       fprintf(stderr, " BLOCSIZE not found in header\n");
@@ -257,10 +249,10 @@ namespace raw {
     }
 
     // Save the header size with no padding
-    raw_hdr->hdr_size = rawspec_raw_header_size(hdr, hdr_size, 0);
+    raw_hdr->hdr_size = rawspec_raw_header_size(raw_hdr->buffer, hdr_size, 0);
 
     // Get size of header plus padding
-    hdr_size = rawspec_raw_header_size(hdr, hdr_size, raw_hdr->directio);
+    hdr_size = rawspec_raw_header_size(raw_hdr->buffer, hdr_size, raw_hdr->directio);
     //printf("RRP: hdr=%lu\n", hdr_size);
 
     // Seek forward from original position past header (and any padding)

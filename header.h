@@ -1,6 +1,7 @@
 #pragma once
 
 namespace raw {
+  const int MAX_RAW_HEADER_SIZE = 25600;
 
   /*
     The Header contains the information we get from processing one block of the .raw file.
@@ -31,6 +32,10 @@ namespace raw {
    it's two bytes. The first byte is real and the second byte is complex.
   */
   typedef struct {
+    // A buffer of raw data that we parse the header out of.
+    // Aligned to a 512-byte boundary so that it can be used with files opened with O_DIRECT.    
+    char buffer[MAX_RAW_HEADER_SIZE] __attribute__ ((aligned (512)));
+
     int directio;
 
     // The "BLOCSIZE" FITS header.
