@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RAW_UTIL_H
+#define __RAW_UTIL_H
 
 #include "hget.h"
 
@@ -158,37 +159,37 @@ namespace raw {
     return 0;
   }
   
-  // Parses rawspec related RAW header params from buf into raw_hdr.
-  void rawspec_raw_parse_header(const char* buf, Header* raw_hdr) {
+  // Parses rawspec related RAW header params from buf into header.
+  void rawspec_raw_parse_header(Header* header) {
     int smjd;
     int imjd;
     char tmp[80];
 
-    raw_hdr->blocsize = rawspec_raw_get_s32(buf, "BLOCSIZE", 0);
-    raw_hdr->npol     = rawspec_raw_get_s32(buf, "NPOL",     0);
-    raw_hdr->obsnchan = rawspec_raw_get_s32(buf, "OBSNCHAN", 0);
-    raw_hdr->nbits    = rawspec_raw_get_u32(buf, "NBITS",    8);
-    raw_hdr->obsfreq  = rawspec_raw_get_dbl(buf, "OBSFREQ",  0.0);
-    raw_hdr->obsbw    = rawspec_raw_get_dbl(buf, "OBSBW",    0.0);
-    raw_hdr->tbin     = rawspec_raw_get_dbl(buf, "TBIN",     0.0);
-    raw_hdr->directio = rawspec_raw_get_s32(buf, "DIRECTIO", 0);
-    raw_hdr->pktidx   = rawspec_raw_get_u64(buf, "PKTIDX",  -1);
-    raw_hdr->beam_id  = rawspec_raw_get_s32(buf, "BEAM_ID", -1);
-    raw_hdr->nbeam    = rawspec_raw_get_s32(buf, "NBEAM",   -1);
-    raw_hdr->nants    = rawspec_raw_get_u32(buf, "NANTS",    1);
+    header->blocsize = header->getInt("BLOCSIZE", 0);
+    header->npol     = header->getInt("NPOL", 0);
+    header->obsnchan = header->getInt("OBSNCHAN", 0);
+    header->nbits    = header->getUnsignedInt("NBITS", 8);
+    header->obsfreq  = header->getDouble("OBSFREQ", 0.0);
+    header->obsbw    = header->getDouble("OBSBW", 0.0);
+    header->tbin     = header->getDouble("TBIN", 0.0);
+    header->directio = header->getInt("DIRECTIO", 0);
+    header->pktidx   = header->getUnsignedLong("PKTIDX", -1);
+    header->beam_id  = header->getInt("BEAM_ID", -1);
+    header->nbeam    = header->getInt("NBEAM", -1);
+    header->nants    = header->getUnsignedInt("NANTS", 1);
 
-    rawspec_raw_get_str(buf, "RA_STR", "0.0", tmp, 80);
-    raw_hdr->ra = rawspec_raw_dmsstr_to_d(tmp);
+    rawspec_raw_get_str(header->buffer, "RA_STR", "0.0", tmp, 80);
+    header->ra = rawspec_raw_dmsstr_to_d(tmp);
 
-    rawspec_raw_get_str(buf, "DEC_STR", "0.0", tmp, 80);
-    raw_hdr->dec = rawspec_raw_dmsstr_to_d(tmp);
+    rawspec_raw_get_str(header->buffer, "DEC_STR", "0.0", tmp, 80);
+    header->dec = rawspec_raw_dmsstr_to_d(tmp);
 
-    imjd = rawspec_raw_get_s32(buf, "STT_IMJD", 51545); // TODO use double?
-    smjd = rawspec_raw_get_s32(buf, "STT_SMJD", 0);     // TODO use double?
-    raw_hdr->mjd = ((double)imjd) + ((double)smjd)/86400.0;
+    imjd = header->getInt("STT_IMJD", 51545);
+    smjd = header->getInt("STT_SMJD", 0);
+    header->mjd = ((double)imjd) + ((double)smjd)/86400.0;
 
-    rawspec_raw_get_str(buf, "SRC_NAME", "Unknown", raw_hdr->src_name, 80);
-    rawspec_raw_get_str(buf, "TELESCOP", "Unknown", raw_hdr->telescop, 80);
+    rawspec_raw_get_str(header->buffer, "SRC_NAME", "Unknown", header->src_name, 80);
+    rawspec_raw_get_str(header->buffer, "TELESCOP", "Unknown", header->telescop, 80);
   }
   
   // Reads RAW file params from fd.  On entry, fd is assumed to be at the start
@@ -210,10 +211,10 @@ namespace raw {
       return 0;
     }
 
-    rawspec_raw_parse_header(raw_hdr->buffer, raw_hdr);
+    rawspec_raw_parse_header(raw_hdr);
 
     if(raw_hdr->blocsize ==  0) {
-      fprintf(stderr, " BLOCSIZE not found in header\n");
+      fprintf(stderr, "BLOCSIZE not found in header\n");
       return -1;
     }
     if(raw_hdr->npol  ==  0) {
@@ -263,3 +264,5 @@ namespace raw {
   }  
 
 }
+
+#endif

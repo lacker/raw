@@ -1,5 +1,10 @@
 #pragma once
 
+#include "hget.h"
+
+static_assert(sizeof(int32_t) == sizeof(int), "require normal-sized int");
+static_assert(sizeof(int64_t) == sizeof(long), "require normal-sized long");
+
 namespace raw {
   const int MAX_RAW_HEADER_SIZE = 25600;
 
@@ -31,7 +36,8 @@ namespace raw {
    Each entry is 2*nbits bits, and for now we only support nbits=8, so
    it's two bytes. The first byte is real and the second byte is complex.
   */
-  typedef struct {
+  class Header {
+  public:
     // A buffer of raw data that we parse the header out of.
     // Aligned to a 512-byte boundary so that it can be used with files opened with O_DIRECT.    
     char buffer[MAX_RAW_HEADER_SIZE] __attribute__ ((aligned (512)));
@@ -61,7 +67,7 @@ namespace raw {
 
     // The "PKTIDX" FITS header.
     // This is an index that counts up through the file, to let us detect missing blocks.
-    int64_t pktidx;
+    long pktidx;
 
     // The "OBSFREQ" FITS header.
     // This is the center frequency of the entire range of frequencies
@@ -135,7 +141,61 @@ namespace raw {
     // and is instead calculated from the other metadata.
     // In particular it is different from obsnchan.
     int num_channels;
-    
-  } Header;
+
+    // Helper to parse an int32 from the header
+    int getInt(const char* key, int default_value) {
+      char tmpstr[48];
+      int32_t value;
+      if (libwcs::hgeti4(buffer, key, &value) == 0) {
+        if (libwcs::hgets(buffer, key, 48, tmpstr) == 0) {
+          value = default_value;
+        } else {
+          value = strtol(tmpstr, NULL, 0);
+        }
+      }
+      return value;
+    }
+
+    // Helper to parse a uint32 from the header
+    unsigned int getUnsignedInt(const char* key, uint32_t default_value) {
+      char tmpstr[48];
+      uint32_t value;
+      if (libwcs::hgetu4(buffer, key, &value) == 0) {
+        if (libwcs::hgets(buffer, key, 48, tmpstr) == 0) {
+          value = default_value;
+        } else {
+          value = strtoul(tmpstr, NULL, 0);
+        }
+      }
+      return value;
+    }
+
+    unsigned long getUnsignedLong(const char* key, unsigned long default_value) {
+      char tmpstr[48];
+      uint64_t value;
+      if (libwcs::hgetu8(buffer, key, &value) == 0) {
+        if (libwcs::hgets(buffer, key, 48, tmpstr) == 0) {
+          value = default_value;
+        } else {
+          value = strtoull(tmpstr, NULL, 0);
+        }
+      }
+      return value;
+    }
+
+    double getDouble(const char* key, double default_value) {
+      char tmpstr[48];
+      double value;
+      if (libwcs::hgetr8(buffer, key, &value) == 0) {
+        if (libwcs::hgets(buffer, key, 48, tmpstr) == 0) {
+          value = default_value;
+        } else {
+          value = strtod(tmpstr, NULL);
+        }
+      }
+      return value;
+    }
+
+  };
 
 }
