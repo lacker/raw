@@ -99,10 +99,6 @@ namespace raw {
     // The beam id. -1 is unknown or a single beam receiver.
     int beam_id;
 
-    // The "NBEAM" FITS header.
-    // The number of total beams. -1 is unknown or a single beam receiver.
-    int nbeam;
-
     // The "NANTS" FITS header.
     // This is the number of antennas in the data.
     unsigned int nants;

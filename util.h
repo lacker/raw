@@ -115,7 +115,6 @@ namespace raw {
     header->directio = header->getInt("DIRECTIO", 0);
     header->pktidx   = header->getUnsignedLong("PKTIDX", -1);
     header->beam_id  = header->getInt("BEAM_ID", -1);
-    header->nbeam    = header->getInt("NBEAM", -1);
     header->nants    = header->getUnsignedInt("NANTS", 1);
 
     rawspec_raw_get_str(header->buffer, "RA_STR", "0.0", tmp, 80);
