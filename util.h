@@ -30,66 +30,6 @@ namespace raw {
     return total_bytes_read;
   }
 
-  int32_t rawspec_raw_get_s32(const char * buf, const char * key, int32_t def)
-  {
-    char tmpstr[48];
-    int32_t value;
-    if (libwcs::hgeti4(buf, key, &value) == 0) {
-      if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
-	value = def;
-      } else {
-	value = strtol(tmpstr, NULL, 0);
-      }
-    }
-
-    return value;
-  }
-
-  uint32_t rawspec_raw_get_u32(const char * buf, const char * key, uint32_t def)
-  {
-    char tmpstr[48];
-    uint32_t value;
-    if (libwcs::hgetu4(buf, key, &value) == 0) {
-      if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
-	value = def;
-      } else {
-	value = strtoul(tmpstr, NULL, 0);
-      }
-    }
-
-    return value;
-  }
-
-  uint64_t rawspec_raw_get_u64(const char * buf, const char * key, uint64_t def)
-  {
-    char tmpstr[48];
-    uint64_t value;
-    if (libwcs::hgetu8(buf, key, &value) == 0) {
-      if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
-	value = def;
-      } else {
-	value = strtoull(tmpstr, NULL, 0);
-      }
-    }
-
-    return value;
-  }
-
-  double rawspec_raw_get_dbl(const char * buf, const char * key, double def)
-  {
-    char tmpstr[48];
-    double value;
-    if (libwcs::hgetr8(buf, key, &value) == 0) {
-      if (libwcs::hgets(buf, key, 48, tmpstr) == 0) {
-	value = def;
-      } else {
-	value = strtod(tmpstr, NULL);
-      }
-    }
-
-    return value;
-  }
-
   void rawspec_raw_get_str(const char * buf, const char * key, const char * def,
 			   char * out, size_t len)
   {
