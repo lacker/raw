@@ -85,7 +85,11 @@ namespace raw {
 	  return false;
 	}
 
-	err << "error getting obs params from " << filename;
+        if (headers_read == 0) {
+          err << "could not open " << filename;
+        } else {
+          err << "error reading block header #" << (headers_read + 1) << " from " << filename;
+        }
 	return false;
       }      
 
