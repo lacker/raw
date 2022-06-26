@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 #include "hget.h"
 
 static_assert(sizeof(int32_t) == sizeof(int), "require normal-sized int");
@@ -93,7 +95,7 @@ namespace raw {
 
     // The start time in MJD format.
     // This is synthesized from the "STT_IMJD" and "STT_SMJD" FITS headers.
-    // This is only accurate to the nearest second, which isn't that great.
+    // This is only accurate to the nearest second.
     // It also (probably) indicates the start time of the overall file, rather than
     // this particular block. So, maybe avoid using this.
     double mjd;
@@ -118,6 +120,9 @@ namespace raw {
     // The size of header in bytes, not including directio padding.
     size_t hdr_size; 
 
+    // NOTE: this comment is wrong and missing_blocks is wrong.
+    // It should increase by piperblk, not by 1.
+    // TODO: fix it
     // Normally, pktidx increases by 1 each block.
     // In some cases, the process writing the .raw file doesn't write
     // some of the blocks that it would normally. missing_blocks
@@ -141,6 +146,25 @@ namespace raw {
     // In particular it is different from obsnchan.
     int num_channels;
 
+    // Gets the unix start time of this block.
+    // Calculates based on SYNCTIME and PIPERBLK headers. I think there is some
+    // error because SYNCTIME is rounded to the nearest second, but the error is at
+    // least consistent across blocks in a file.
+    // Assert-fails if a required header is missing, so be careful.
+    double getStartTime() {
+      long synctime = getUnsignedInt("SYNCTIME", -1);
+      assert(synctime > 0);
+      long piperblk = getUnsignedInt("PIPERBLK", -1);
+      assert(piperblk > 0);
+      double time_per_packet = tbin * num_timesteps / piperblk;
+      return synctime + pktidx * time_per_packet;
+    }
+
+    // Gets the unix time that represents the temporal midpoint of the block.
+    double getMidTime() {
+      return getStartTime() + (tbin * num_timesteps) / 2.0;
+    }
+    
     // Helper to parse an int32 from the header
     int getInt(const char* key, int default_value) {
       char tmpstr[48];
