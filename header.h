@@ -106,7 +106,7 @@ namespace raw {
 
     // The "NANTS" FITS header.
     // This is the number of antennas in the data.
-    unsigned int nants;
+    int nants;
 
     // The "SRC_NAME" FITS header.
     // The name of the current target.

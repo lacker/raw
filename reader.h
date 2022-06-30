@@ -146,6 +146,53 @@ namespace raw {
       }
       current_block_offset += current_block_size;
       return true;
-    }    
+    }
+
+    // Reads a subset of the data in this block, defined by a frequency subband.
+    bool readBand(const Header& header, int band, int num_bands, char* buffer) {
+      assert(0 == header.num_channels % num_bands);
+      int channels_per_band = header.num_channels / num_bands;
+      assert(band < num_bands);
+      if (current_block_offset != 0) {
+        err << "cannot readSubband when data from this block has already been read";
+        return false;
+      }
+
+      // The slowest-moving index in the data is the antenna. After that is the frequency.
+      // So, each antenna-band pair contains this much contiguous bytes:
+      int band_bytes = channels_per_band * header.num_timesteps * header.npol * 2;
+
+      // Each antenna has preband_bytes before the band we're interested in
+      int preband_bytes = band * band_bytes;
+
+      // Then each antenna has postband_bytes after the band we're interested in
+      int postband_bytes = (num_bands - band - 1) * band_bytes;
+
+      assert(current_block_size == header.nants * (preband_bytes + band_bytes + postband_bytes));
+      
+      char* dest = buffer;
+      for (int antenna = 0; antenna < header.nants; ++antenna) {
+        // Advance to the band
+        if (antenna == 0) {
+	  lseek(fdin, preband_bytes, SEEK_CUR);
+        } else {
+          lseek(fdin, postband_bytes + preband_bytes, SEEK_CUR);
+        }
+
+        // Read the actual band
+        int bytes_read = read_fully(fdin, dest, band_bytes);
+        if (bytes_read < band_bytes) {
+          std::cerr << "incomplete block in readBand";
+          return false;
+        }
+        dest += band_bytes;
+      }
+
+      // Advance to the end of the data region
+      lseek(fdin, postband_bytes, SEEK_CUR);
+
+      current_block_offset += current_block_size;
+      return true;
+    }
   };
 }
