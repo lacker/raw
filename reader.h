@@ -136,7 +136,7 @@ namespace raw {
 	return false;
       }
       if (bytes_read < current_block_size) {
-	std::cerr << "incomplete block at end of file";
+	err << "incomplete block at end of file";
 	return false;
       }
       current_block_offset += current_block_size;
@@ -177,7 +177,7 @@ namespace raw {
         // Read the actual band
         int bytes_read = read_fully(fdin, dest, band_bytes);
         if (bytes_read < band_bytes) {
-          std::cerr << "incomplete block in readBand";
+          err << "incomplete block in readBand";
           return false;
         }
         dest += band_bytes;
