@@ -114,11 +114,6 @@ namespace raw {
 	return false;
       }
 
-      if (headers_read > 0) {
-	header->missing_blocks = pktidx - header->pktidx - 1;
-      } else {
-	header->missing_blocks = 0;
-      }
       pktidx = header->pktidx;
       
       header->num_timesteps = header->blocsize / bytes_per_timestep;

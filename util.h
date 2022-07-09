@@ -9,7 +9,7 @@ namespace raw {
   // Reads `bytes_to_read` bytes from `fd` into the buffer pointed to by `buf`.
   // Returns the total bytes read or -1 on error.  A non-negative return value
   // will be less than `bytes_to_read` only of EOF is reached.
-  ssize_t read_fully(int fd, char* buf, size_t bytes_to_read) {
+  inline ssize_t read_fully(int fd, char* buf, size_t bytes_to_read) {
     ssize_t bytes_read;
     ssize_t total_bytes_read = 0;
 
@@ -30,7 +30,7 @@ namespace raw {
     return total_bytes_read;
   }
 
-  void rawspec_raw_get_str(const char * buf, const char * key, const char * def,
+  inline void rawspec_raw_get_str(const char * buf, const char * key, const char * def,
 			   char * out, size_t len)
   {
     if (libwcs::hgets(buf, key, len, out) == 0) {
@@ -39,7 +39,7 @@ namespace raw {
     }
   }
 
-  double rawspec_raw_dmsstr_to_d(char * dmsstr)
+  inline double rawspec_raw_dmsstr_to_d(char * dmsstr)
   {
     int sign = 1;
     double d = 0.0;
@@ -78,7 +78,7 @@ namespace raw {
     return sign * d;
   }
 
-  int rawspec_raw_header_size(char * hdr, int len, int directio)
+  inline int rawspec_raw_header_size(char * hdr, int len, int directio)
   {
     int i;
 
@@ -100,7 +100,7 @@ namespace raw {
   }
   
   // Parses rawspec related RAW header params from buf into header.
-  void rawspec_raw_parse_header(Header* header) {
+  inline void rawspec_raw_parse_header(Header* header) {
     int smjd;
     int imjd;
     char tmp[80];
@@ -136,7 +136,7 @@ namespace raw {
   // of the subsequent data block and the file descriptor `fd` will also refer to
   // that location in the file.  On EOF, this function returns 0.  On failure,
   // this function returns -1 and the location to which fd refers is undefined.
-  off_t rawspec_raw_read_header(int fd, Header* raw_hdr) {
+  inline off_t rawspec_raw_read_header(int fd, Header* raw_hdr) {
     int hdr_size;
     off_t pos = lseek(fd, 0, SEEK_CUR);
 

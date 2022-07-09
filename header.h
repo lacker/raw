@@ -120,19 +120,6 @@ namespace raw {
     // The size of header in bytes, not including directio padding.
     size_t hdr_size; 
 
-    // NOTE: this comment is wrong and missing_blocks is wrong.
-    // It should increase by piperblk, not by 1.
-    // TODO: fix it
-    // Normally, pktidx increases by 1 each block.
-    // In some cases, the process writing the .raw file doesn't write
-    // some of the blocks that it would normally. missing_blocks
-    // provides the number of blocks that were "missing" in this way,
-    // between this header and the previous block.
-    // Depending on the downstream application, you might want to
-    // treat these blocks as being equivalent to all zeros, or
-    // simply ignore them.
-    int missing_blocks;
-
     // The number of timesteps in the data.
     // This isn't stored explicitly in a FITS header because we can
     // calculate it from the other metadata, but it's useful so we include it here.

@@ -139,8 +139,7 @@ typedef unsigned long long uint8;
   const static int lhead0 = 0;  /* Length of header string */
 
   /* Set the length of the header string, if not terminated by NULL */
-  int
-    hlength (const char* header, int lhead)
+  inline int hlength (const char* header, int lhead)
   // const char *header; /* FITS header */
   // int     lhead;  /* Maximum length of FITS header */
   {
@@ -160,8 +159,7 @@ typedef unsigned long long uint8;
   }
 
   /* Return the length of the header string, computing it if lhead0 not set */
-  int
-    gethlength (char* header)
+  inline int gethlength (char* header)
   // char    *header; /* FITS header */
   {
     if (lhead0 > 0)
@@ -173,7 +171,7 @@ typedef unsigned long long uint8;
 
   /* Extract Integer*4 value for variable from FITS header string */
 
-  int hgeti4c (const char* hstring, const char* keyword, const char* wchar, int *ival)
+  inline int hgeti4c (const char* hstring, const char* keyword, const char* wchar, int *ival)
 
   // const char *hstring;    /* character string containing FITS header information
   //                         in the format <keyword>= <value> {/ <comment>} */
@@ -202,8 +200,7 @@ typedef unsigned long long uint8;
 
   /* Extract integer*8 value for variable from FITS header string */
 
-  int
-    hgeti8 (const char* hstring, const char* keyword, int *i8val)
+  inline int hgeti8 (const char* hstring, const char* keyword, int *i8val)
 
   // const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
@@ -237,8 +234,7 @@ typedef unsigned long long uint8;
 
   /* Extract unsigned integer*8 value for variable from FITS header string */
 
-  int
-    hgetu8 (const char* hstring, const char* keyword, uint8 *i8val)
+  inline int hgetu8 (const char* hstring, const char* keyword, uint8 *i8val)
 
   // const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
@@ -272,7 +268,7 @@ typedef unsigned long long uint8;
 
   /* Extract long value for variable from FITS header string */
 
-  int hgeti4 (const char* hstring, const char* keyword, int *ival)
+  inline int hgeti4 (const char* hstring, const char* keyword, int *ival)
 
   // const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
@@ -330,9 +326,8 @@ typedef unsigned long long uint8;
 
   /* Extract unsigned long value for variable from FITS header string */
 
-  int
-    hgetu4 (const char* hstring, const char* keyword, unsigned int *ival)
-
+  inline int hgetu4 (const char* hstring, const char* keyword, unsigned int *ival)
+    
   // const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
   // const char *keyword;    /* character string containing the name of the keyword
@@ -390,8 +385,7 @@ typedef unsigned long long uint8;
 
   /* Extract integer*2 value for variable from fits header string */
 
-  int
-    hgeti2 (const char* hstring, const char* keyword, short *ival)
+  inline int hgeti2 (const char* hstring, const char* keyword, short *ival)
 
   // const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
@@ -449,8 +443,7 @@ typedef unsigned long long uint8;
 
   /* Extract real value for variable from FITS header string */
 
-  int
-    hgetr4 (const char* hstring, const char* keyword, float *rval)
+  inline int hgetr4 (const char* hstring, const char* keyword, float *rval)
 
   // const char *hstring;    /* character string containing FITS header information
   // in the format <keyword>= <value> {/ <comment>} */
@@ -498,8 +491,7 @@ typedef unsigned long long uint8;
 
   /* Extract real*8 right ascension in degrees from FITS header string */
 
-  int
-    hgetra (const char* hstring, const char* keyword, double *dval)
+  inline int hgetra (const char* hstring, const char* keyword, double *dval)
 
   // const char *hstring;    /* character string containing FITS header information
   //                   in the format <keyword>= <value> {/ <comment>} */
@@ -527,8 +519,7 @@ typedef unsigned long long uint8;
 
   /* Extract real*8 declination in degrees from FITS header string */
 
-  int
-    hgetdec (const char* hstring, const char* keyword, double *dval)
+  inline int hgetdec (const char* hstring, const char* keyword, double *dval)
 
   // const char *hstring;    /* character string containing FITS header information
   //                   in the format <keyword>= <value> {/ <comment>} */
@@ -555,8 +546,7 @@ typedef unsigned long long uint8;
 
 
   /* Extract real*8 value for variable from FITS header string */
-
-  int hgetr8c (const char* hstring, const char* keyword, const char* wchar, double *dval)
+  inline int hgetr8c (const char* hstring, const char* keyword, const char* wchar, double *dval)
 
   // const char *hstring;    /* character string containing FITS header information
   //                           in the format <keyword>= <value> {/ <comment>} */
@@ -586,7 +576,7 @@ typedef unsigned long long uint8;
 
   /* Extract real*8 value for variable from FITS header string */
 
-  int hgetr8 (const char* hstring, const char* keyword, double *dval)
+  inline int hgetr8 (const char* hstring, const char* keyword, double *dval)
   /*
     const char *hstring;    // character string containing FITS header information
     in the format <keyword>= <value> {/ <comment>}
@@ -634,8 +624,7 @@ typedef unsigned long long uint8;
 
   /* Extract logical value for variable from FITS header string */
 
-  int
-    hgetl (const char* hstring, const char* keyword, int *ival)
+  inline int hgetl (const char* hstring, const char* keyword, int *ival)
 
   //const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
@@ -678,8 +667,7 @@ typedef unsigned long long uint8;
 
   /* Extract real*8 date from FITS header string (dd/mm/yy or dd-mm-yy) */
 
-  int
-    hgetdate (const char* hstring, const char* keyword, double *dval)
+  inline int hgetdate (const char* hstring, const char* keyword, double *dval)
 
   //const char *hstring;    /* character string containing FITS header information
   //                 in the format <keyword>= <value> {/ <comment>} */
@@ -842,8 +830,7 @@ typedef unsigned long long uint8;
 
   /* Extract string value for variable from FITS header string */
 
-  int
-    hgetsc (const char* hstring, const char* keyword, const char* wchar, const int lstr, char* str)
+  inline int hgetsc (const char* hstring, const char* keyword, const char* wchar, const int lstr, char* str)
 
   //const char *hstring;    /* character string containing FITS header information
   //                           in the format <keyword>= <value> {/ <comment>} */
@@ -873,7 +860,7 @@ typedef unsigned long long uint8;
 
   /* Extract string value for variable from FITS header string */
 
-  int hgets (const char* hstring, const char* keyword, const int lstr, char* str)
+  inline int hgets (const char* hstring, const char* keyword, const int lstr, char* str)
 
   //const char *hstring;    /* character string containing FITS header information
   //                   in the format <keyword>= <value> {/ <comment>} */
@@ -908,7 +895,7 @@ typedef unsigned long long uint8;
 
   /* Extract number of decimal places for value in FITS header string */
 
-  int hgetndec (const char* hstring, const char* keyword, int *ndec)
+  inline int hgetndec (const char* hstring, const char* keyword, int *ndec)
 
   //const char *hstring;    /* character string containing FITS header information
   //                   in the format <keyword>= <value> {/ <comment>} */
@@ -943,7 +930,7 @@ typedef unsigned long long uint8;
 
   /* Extract character value for variable from FITS header string */
 
-  char* hgetc (const char* hstring, const char* keyword0)
+  inline char* hgetc (const char* hstring, const char* keyword0)
 
   // const char *hstring;    /* character string containing FITS header information
   //                   in the format <keyword>= <value> {/ <comment>} */
@@ -1188,7 +1175,7 @@ typedef unsigned long long uint8;
 
   /* Find beginning of fillable blank line before FITS header keyword line */
 
-  char* blsearch (const char* hstring, const char* keyword)
+  inline char* blsearch (const char* hstring, const char* keyword)
 
   /* Find entry for keyword keyword in FITS header string hstring.
      (the keyword may have a maximum of eight letters)
@@ -1286,8 +1273,7 @@ typedef unsigned long long uint8;
 
   /* Find FITS header line containing specified keyword */
 
-  char *
-    ksearch (const char* hstring, const char* keyword)
+  inline char* ksearch (const char* hstring, const char* keyword)
 
   /* Find entry for keyword keyword in FITS header string hstring.
      (the keyword may have a maximum of eight letters)
@@ -1391,7 +1377,7 @@ typedef unsigned long long uint8;
 
   /* Return the right ascension in degrees from sexagesimal hours or decimal degrees */
 
-  double str2ra (const char* in)
+  inline double str2ra (const char* in)
 
   // const char *in; /* Character string of sexigesimal hours or decimal degrees */
 
@@ -1408,7 +1394,7 @@ typedef unsigned long long uint8;
 
   /* Return the declination in degrees from sexagesimal or decimal degrees */
 
-  double str2dec (const char* in)
+  inline double str2dec (const char* in)
 
   // const char *in; /* Character string of sexigesimal or decimal degrees */
 
@@ -1493,7 +1479,7 @@ typedef unsigned long long uint8;
 
   /* Find string s2 within null-terminated string s1 */
 
-  char * strsrch (const char* s1, const char* s2)
+  inline char * strsrch (const char* s1, const char* s2)
 
   // const char *s1; /* String to search */
   // const char *s2; /* String to look for */
@@ -1507,7 +1493,7 @@ typedef unsigned long long uint8;
 
   /* Find string s2 within string s1 */
 
-  char * strnsrch (const char* s1, const char* s2, const int ls1)
+  inline char * strnsrch (const char* s1, const char* s2, const int ls1)
 
   // const char *s1; /* String to search */
   // const char *s2; /* String to look for */
@@ -1569,8 +1555,7 @@ typedef unsigned long long uint8;
 
   /* Find string s2 within null-terminated string s1 (case-free search) */
 
-  char *
-    strcsrch (const char* s1, const char* s2)
+  inline char* strcsrch (const char* s1, const char* s2)
 
   // const char *s1; /* String to search */
   // const char *s2; /* String to look for */
@@ -1584,7 +1569,7 @@ typedef unsigned long long uint8;
 
   /* Find string s2 within string s1 (case-free search) */
 
-  char * strncsrch (const char* s1, const char* s2, const int ls1)
+  inline char* strncsrch (const char* s1, const char* s2, const int ls1)
 
   // const char *s1; /* String to search */
   // const char *s2; /* String to look for */
@@ -1688,8 +1673,7 @@ typedef unsigned long long uint8;
   }
 
 
-  int
-    notnum (const char* string)
+  inline int notnum (const char* string)
 
   // const char *string;     /* Character string */
   {
@@ -1706,7 +1690,7 @@ typedef unsigned long long uint8;
      else 0
   */
 
-  int isnum (const char* string)
+  inline int isnum (const char* string)
 
   // const char *string;     /* Character string */
   {
@@ -1782,7 +1766,7 @@ typedef unsigned long long uint8;
 
   /* NUMDEC -- Return number of decimal places in numeric string (-1 if not number) */
 
-  int numdec (const char* string)
+  inline int numdec (const char* string)
 
   // const char *string;     /* Numeric string */
   {
@@ -1802,7 +1786,7 @@ typedef unsigned long long uint8;
 
 
 #ifdef USE_SAOLIB
-  int set_saolib(hstring)
+  inline int set_saolib(hstring)
     void *hstring;
   {
     if( *((int *)hstring) == 142857 )
@@ -1815,8 +1799,7 @@ typedef unsigned long long uint8;
 
 
   /* Remove exponent, leading #, and/or trailing zeroes, if reasonable */
-  void
-    strfix (char* string, int fillblank, int dropzero)
+  inline void strfix (char* string, int fillblank, int dropzero)
 
   // char    *string;        /* String to modify */
   // int     fillblank;      /* If nonzero, fill blanks with underscores */
