@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assert.h>
+#include <string>
 
 #include "hget.h"
 
@@ -206,6 +207,13 @@ namespace raw {
       return value;
     }
 
+    std::string getString(const char* key) {
+      char value[80];
+      if (libwcs::hgets(buffer, key, 80, value) == 0) {
+        return "";
+      }
+      return std::string(value);
+    }
   };
 
 }
