@@ -48,7 +48,8 @@ namespace raw {
     int directio;
 
     // The "BLOCSIZE" FITS header.
-    // This is the size of the following data segment, in bytes, not including directio padding.
+    // This is the size of the following data segment, in bytes, not including directio
+    // padding.
     size_t blocsize;
 
     // The "NPOL" FITS header, with the exception that any 4 is
@@ -64,7 +65,7 @@ namespace raw {
     unsigned int obsnchan;
 
     // The "NBITS" FITS header.
-    // This is the number of bits used to store each real or complex values, as a signed int.
+    // This is the number of bits used to store each real or complex values.
     // We only support nbits = 8.
     unsigned int nbits;
 
@@ -134,6 +135,9 @@ namespace raw {
     // In particular it is different from obsnchan.
     int num_channels;
 
+    // The offset in the file of the data block for this header
+    off_t data_offset;
+    
     // Gets the unix start time of this block.
     // Calculates based on SYNCTIME and PIPERBLK headers. I think there is some
     // error because SYNCTIME is rounded to the nearest second, but the error is at

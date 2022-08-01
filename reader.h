@@ -153,7 +153,7 @@ namespace raw {
       int channels_per_band = header.num_channels / num_bands;
       assert(band < num_bands);
       if (current_block_offset != 0) {
-        err << "cannot readSubband when data from this block has already been read";
+        err << "cannot readSubband when data from this block has been read";
         return false;
       }
 
@@ -174,19 +174,9 @@ namespace raw {
       off_t pos = lseek(fdin, 0, SEEK_CUR);
       
       for (int antenna = 0; antenna < header.nants; ++antenna) {
-        // Advance to the band
-        if (antenna == 0) {
-	  lseek(fdin, preband_bytes, SEEK_CUR);
-        } else {
-          lseek(fdin, postband_bytes + preband_bytes, SEEK_CUR);
-        }
-
-        // Read the actual band
-        // int bytes_read = read_fully(fdin, dest, band_bytes);
         int bytes_read = pread_fully(fdin, dest, band_bytes,
                                      pos + preband_bytes +
                                      antenna * num_bands * band_bytes);
-        lseek(fdin, band_bytes, SEEK_CUR);
         
         if (bytes_read < band_bytes) {
           err << "incomplete block in readBand";
@@ -195,10 +185,6 @@ namespace raw {
         dest += band_bytes;
       }
 
-      // Advance to the end of the data region
-      lseek(fdin, postband_bytes, SEEK_CUR);
-
-      current_block_offset += current_block_size;
       return true;
     }
   };

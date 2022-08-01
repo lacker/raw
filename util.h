@@ -215,9 +215,8 @@ namespace raw {
     hdr_size = rawspec_raw_header_size(raw_hdr->buffer, hdr_size, raw_hdr->directio);
     //printf("RRP: hdr=%lu\n", hdr_size);
 
-    // Seek forward from original position past header (and any padding)
-    pos = lseek(fd, pos + hdr_size, SEEK_SET);
-    //printf("RRP: seek=%ld\n", pos);
+    raw_hdr->data_offset = pos + hdr_size;    
+    pos = lseek(fd, raw_hdr->data_offset, SEEK_SET);
 
     return pos;
   }  
