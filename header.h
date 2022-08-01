@@ -165,7 +165,7 @@ namespace raw {
     }
     
     // Helper to parse an int32 from the header
-    int getInt(const char* key, int default_value) {
+    int getInt(const char* key, int default_value) const {
       char tmpstr[48];
       int32_t value;
       if (libwcs::hgeti4(buffer, key, &value) == 0) {
@@ -179,7 +179,7 @@ namespace raw {
     }
 
     // Helper to parse a uint32 from the header
-    unsigned int getUnsignedInt(const char* key, uint32_t default_value) {
+    unsigned int getUnsignedInt(const char* key, uint32_t default_value) const {
       char tmpstr[48];
       uint32_t value;
       if (libwcs::hgetu4(buffer, key, &value) == 0) {
@@ -192,7 +192,7 @@ namespace raw {
       return value;
     }
 
-    unsigned long getUnsignedLong(const char* key, unsigned long default_value) {
+    unsigned long getUnsignedLong(const char* key, unsigned long default_value) const {
       char tmpstr[48];
       uint64_t value;
       if (libwcs::hgetu8(buffer, key, &value) == 0) {
@@ -205,7 +205,7 @@ namespace raw {
       return value;
     }
 
-    double getDouble(const char* key, double default_value) {
+    double getDouble(const char* key, double default_value) const {
       char tmpstr[48];
       double value;
       if (libwcs::hgetr8(buffer, key, &value) == 0) {
@@ -218,7 +218,7 @@ namespace raw {
       return value;
     }
 
-    std::string getString(const char* key) {
+    std::string getString(const char* key) const {
       char value[80];
       if (libwcs::hgets(buffer, key, 80, value) == 0) {
         return "";
