@@ -137,6 +137,13 @@ namespace raw {
 
     // The offset in the file of the data block for this header
     off_t data_offset;
+
+    Header() {}
+    Header(const Header&) = delete;
+    Header& operator=(Header&) = delete;
+
+    Header(Header&&) = default;
+    Header& operator=(Header&&) = default;
     
     // Gets the unix start time of this block.
     // Calculates based on SYNCTIME and PIPERBLK headers. I think there is some
