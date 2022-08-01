@@ -46,6 +46,9 @@ namespace raw {
       // posix_fadvise(fdin, 0, 0, POSIX_FADV_SEQUENTIAL);
     }
 
+    Reader(const Reader&) = delete;
+    Reader& operator=(Reader&) = delete;
+    
     ~Reader() {
       close(fdin);
     }
@@ -148,14 +151,12 @@ namespace raw {
     }
 
     // Reads a subset of the data in this block, defined by a frequency subband.
-    bool readBand(const Header& header, int band, int num_bands, char* buffer) {
+    // Returns whether the read succeeded.
+    // This works regardless of where fdin is pointing and does not modify fdin.
+    bool readBand(const Header& header, int band, int num_bands, char* buffer) const {
       assert(0 == header.num_channels % num_bands);
       int channels_per_band = header.num_channels / num_bands;
       assert(band < num_bands);
-      if (current_block_offset != 0) {
-        err << "cannot readSubband when data from this block has been read";
-        return false;
-      }
 
       // The slowest-moving index in the data is the antenna. After that is the frequency.
       // So, each antenna-band pair contains this much contiguous bytes:
@@ -164,27 +165,18 @@ namespace raw {
       // Each antenna has preband_bytes before the band we're interested in
       int preband_bytes = band * band_bytes;
 
-      // Then each antenna has postband_bytes after the band we're interested in
-      int postband_bytes = (num_bands - band - 1) * band_bytes;
-
-      assert(current_block_size ==
-             header.nants * (preband_bytes + band_bytes + postband_bytes));
-      
       char* dest = buffer;
-      off_t pos = lseek(fdin, 0, SEEK_CUR);
       
       for (int antenna = 0; antenna < header.nants; ++antenna) {
         int bytes_read = pread_fully(fdin, dest, band_bytes,
-                                     pos + preband_bytes +
+                                     header.data_offset + preband_bytes +
                                      antenna * num_bands * band_bytes);
         
         if (bytes_read < band_bytes) {
-          err << "incomplete block in readBand";
           return false;
         }
         dest += band_bytes;
       }
-
       return true;
     }
   };
