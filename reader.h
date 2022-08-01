@@ -196,7 +196,7 @@ namespace raw {
       char* dest = buffer;
       
       for (int antenna = 0; antenna < header.nants; ++antenna) {
-        auto fut = std::async(pread_fully, fdin, dest, band_bytes,
+        auto fut = std::async(std::launch::async, pread_fully, fdin, dest, band_bytes,
                               header.data_offset + preband_bytes +
                               antenna * num_bands * band_bytes);
         futures->push_back(move(fut));
