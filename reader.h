@@ -1,12 +1,13 @@
 #pragma once
 
 #include <fcntl.h>
+#include <future>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <vector>
+#include <vector> 
 
 #include "error_message.h"
 #include "header.h"
@@ -168,16 +169,40 @@ namespace raw {
       char* dest = buffer;
       
       for (int antenna = 0; antenna < header.nants; ++antenna) {
-        int bytes_read = pread_fully(fdin, dest, band_bytes,
-                                     header.data_offset + preband_bytes +
-                                     antenna * num_bands * band_bytes);
-        
-        if (bytes_read < band_bytes) {
+        if (!pread_fully(fdin, dest, band_bytes,
+                         header.data_offset + preband_bytes +
+                         antenna * num_bands * band_bytes)) {
           return false;
         }
         dest += band_bytes;
       }
       return true;
     }
+
+    // Like readBand but puts the individual read successes into futures.
+    void readBandAsync(const Header& header, int band, int num_bands,
+                       char* buffer, std::vector<std::future<bool> >* futures) const {
+      assert(0 == header.num_channels % num_bands);
+      int channels_per_band = header.num_channels / num_bands;
+      assert(band < num_bands);
+
+      // The slowest-moving index in the data is the antenna. After that is the frequency.
+      // So, each antenna-band pair contains this much contiguous bytes:
+      int band_bytes = channels_per_band * header.num_timesteps * header.npol * 2;
+
+      // Each antenna has preband_bytes before the band we're interested in
+      int preband_bytes = band * band_bytes;
+
+      char* dest = buffer;
+      
+      for (int antenna = 0; antenna < header.nants; ++antenna) {
+        auto fut = std::async(pread_fully,fdin, dest, band_bytes,
+                              header.data_offset + preband_bytes +
+                              antenna * num_bands * band_bytes);
+        futures->push_back(move(fut));
+        dest += band_bytes;
+      }
+    }
+    
   };
 }

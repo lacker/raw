@@ -30,9 +30,10 @@ namespace raw {
     return total_bytes_read;
   }
 
-  inline ssize_t pread_fully(int fd, char* buf, size_t bytes_to_read, off_t offset) {
+  // Returns whether we read the whole thing.
+  inline bool pread_fully(int fd, char* buf, size_t bytes_to_read, off_t offset) {
     ssize_t bytes_read;
-    ssize_t total_bytes_read = 0;
+    size_t total_bytes_read = 0;
     while (bytes_to_read > 0) {
       bytes_read = pread(fd, buf, bytes_to_read, offset);
       if (bytes_read == 0) {
@@ -48,9 +49,9 @@ namespace raw {
       total_bytes_read += bytes_read;
     }
 
-    return total_bytes_read;
+    return 0 == bytes_to_read;
   }
-  
+
   inline void rawspec_raw_get_str(const char * buf, const char * key, const char * def,
 			   char * out, size_t len)
   {
