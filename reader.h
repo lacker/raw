@@ -63,7 +63,8 @@ namespace raw {
     // Reads the next header, advancing the internal file descriptor to the start of the
     // subsequent data block.
     // Returns whether the read was successful.
-    // If readHeader returns false, it can either be an error, or we reached the end of the file.
+    // If readHeader returns false, it can either be an error, or we reached the end of
+    // the file.
     // Callers should check reader.error() to see if there was an error.
     bool readHeader(Header* header) {
       if (error()) {
@@ -88,14 +89,16 @@ namespace raw {
         if (headers_read == 0) {
           err << "could not open " << filename;
         } else {
-          err << "error reading block header #" << (headers_read + 1) << " from " << filename;
+          err << "error reading block header #" << (headers_read + 1) << " from "
+              << filename;
         }
 	return false;
       }      
 
       // Verify that obsnchan is divisible by nants
       if (header->obsnchan % header->nants != 0) {
-	err << "bad obsnchan/nants: " << header->obsnchan << " % " << header->nants << " != 0";
+	err << "bad obsnchan/nants: " << header->obsnchan << " % " << header->nants
+            << " != 0";
 	return false;
       }
       header->num_channels = header->obsnchan / header->nants;
@@ -110,7 +113,8 @@ namespace raw {
       int bits_per_timestep = 2 * header->npol * header->obsnchan * header->nbits;
       int bytes_per_timestep = bits_per_timestep / 8;
       if (header->blocsize % bytes_per_timestep != 0) {
-	err << "invalid block dimensions: blocsize " << header->blocsize << " is not divisible by " << bytes_per_timestep;
+	err << "invalid block dimensions: blocsize " << header->blocsize
+            << " is not divisible by " << bytes_per_timestep;
 	return false;
       }
 
@@ -163,9 +167,12 @@ namespace raw {
       // Then each antenna has postband_bytes after the band we're interested in
       int postband_bytes = (num_bands - band - 1) * band_bytes;
 
-      assert(current_block_size == header.nants * (preband_bytes + band_bytes + postband_bytes));
+      assert(current_block_size ==
+             header.nants * (preband_bytes + band_bytes + postband_bytes));
       
       char* dest = buffer;
+      off_t pos = lseek(fdin, 0, SEEK_CUR);
+      
       for (int antenna = 0; antenna < header.nants; ++antenna) {
         // Advance to the band
         if (antenna == 0) {
@@ -175,7 +182,12 @@ namespace raw {
         }
 
         // Read the actual band
-        int bytes_read = read_fully(fdin, dest, band_bytes);
+        // int bytes_read = read_fully(fdin, dest, band_bytes);
+        int bytes_read = pread_fully(fdin, dest, band_bytes,
+                                     pos + preband_bytes +
+                                     antenna * num_bands * band_bytes);
+        lseek(fdin, band_bytes, SEEK_CUR);
+        
         if (bytes_read < band_bytes) {
           err << "incomplete block in readBand";
           return false;
