@@ -1,6 +1,5 @@
 #pragma once
 
-#include <future>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
