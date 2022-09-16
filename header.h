@@ -150,7 +150,7 @@ namespace raw {
     // error because SYNCTIME is rounded to the nearest second, but the error is at
     // least consistent across blocks in a file.
     // Assert-fails if a required header is missing, so be careful.
-    double getStartTime() {
+    double getStartTime() const {
       long synctime = getUnsignedInt("SYNCTIME", -1);
       assert(synctime > 0);
       long piperblk = getUnsignedInt("PIPERBLK", -1);
