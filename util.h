@@ -1,6 +1,7 @@
 #ifndef __RAW_UTIL_H
 #define __RAW_UTIL_H
 
+#include <errno.h>
 #include "hget.h"
 
 // Utilities ported from plain C.
@@ -165,9 +166,11 @@ namespace raw {
     // Read header (plus some data, probably)
     hdr_size = read(fd, raw_hdr->buffer, MAX_RAW_HEADER_SIZE);
 
-    if(hdr_size == -1) {
+    if (hdr_size == -1) {
+      int err = errno;
+      fprintf(stderr, "read failed. errno = %d\n", err);
       return -1;
-    } else if(hdr_size < 80) {
+    } else if (hdr_size < 80) {
       return 0;
     }
 

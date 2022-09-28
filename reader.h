@@ -43,7 +43,7 @@ namespace raw {
     std::string filename;
     
     Reader(const std::string& filename) : filename(filename) {
-      fdin = open(filename.c_str(), O_RDONLY | O_DIRECT);
+      fdin = open(filename.c_str(), O_RDONLY);
       // posix_fadvise(fdin, 0, 0, POSIX_FADV_SEQUENTIAL);
     }
 
@@ -94,7 +94,7 @@ namespace raw {
           err << "could not open " << filename;
         } else {
           err << "error reading block header #" << (headers_read + 1) << " from "
-              << filename;
+              << filename << " - pos = " << pos;
         }
 	return false;
       }      
