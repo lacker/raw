@@ -157,9 +157,9 @@ namespace raw {
     bool readBand(const Header& header, int band, int num_bands, char* buffer) const {
       std::vector<std::function<bool()> > tasks;
       readBandTasks(header, band, num_bands, buffer, &tasks);
-      bool answer;
+      bool answer = true;
       for (auto& t : tasks) {
-        answer = answer || t();
+        answer = answer && t();
       }
       return answer;
     }
