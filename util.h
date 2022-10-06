@@ -37,11 +37,13 @@ namespace raw {
     size_t total_bytes_read = 0;
     while (bytes_to_read > 0) {
       bytes_read = pread(fd, buf, bytes_to_read, offset);
+      if (bytes_read < 0) {
+        int err = errno;
+        fprintf(stderr, "pread failed. errno = %d\n", err);
+        return false;
+      }
       if (bytes_read == 0) {
         break;
-      }
-      if (bytes_read < 0) {
-        return -1;
       }
 
       buf += bytes_read;
@@ -50,7 +52,11 @@ namespace raw {
       total_bytes_read += bytes_read;
     }
 
-    return 0 == bytes_to_read;
+    if (bytes_to_read > 0) {
+      fprintf(stderr, "pread hit unexpected EOF\n");
+      return false;
+    }
+    return true;
   }
 
   inline void rawspec_raw_get_str(const char * buf, const char * key, const char * def,
