@@ -8,8 +8,10 @@
 static_assert(sizeof(int32_t) == sizeof(int), "require normal-sized int");
 static_assert(sizeof(int64_t) == sizeof(long), "require normal-sized long");
 
+
 namespace raw {
   const int MAX_RAW_HEADER_SIZE = 25600;
+  const unsigned int UNSIGNED_INT_NOT_PRESENT = -1;
 
   /*
     The Header contains the information we get from processing one block of the .raw file.
@@ -151,10 +153,10 @@ namespace raw {
     // least consistent across blocks in a file.
     // Assert-fails if a required header is missing, so be careful.
     double getStartTime() const {
-      long synctime = getUnsignedInt("SYNCTIME", -1);
-      assert(synctime > 0);
-      long piperblk = getUnsignedInt("PIPERBLK", -1);
-      assert(piperblk > 0);
+      long synctime = getUnsignedInt("SYNCTIME", UNSIGNED_INT_NOT_PRESENT);
+      assert(synctime != UNSIGNED_INT_NOT_PRESENT);
+      long piperblk = getUnsignedInt("PIPERBLK", UNSIGNED_INT_NOT_PRESENT);
+      assert(piperblk != UNSIGNED_INT_NOT_PRESENT);
       double time_per_packet = tbin * num_timesteps / piperblk;
       return synctime + pktidx * time_per_packet;
     }
