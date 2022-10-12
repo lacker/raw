@@ -148,10 +148,12 @@ namespace raw {
     Header& operator=(Header&&) = default;
     
     // Gets the unix start time of this block.
-    // Calculates based on SYNCTIME and PIPERBLK headers. I think there is some
-    // error because SYNCTIME is rounded to the nearest second, but the error is at
-    // least consistent across blocks in a file.
-    // Assert-fails if a required header is missing, so be careful.
+    //
+    // Calculates based on SYNCTIME and PIPERBLK headers. Note that SYNCTIME is
+    // an integer, but it is supposed to have very high precision. The writer of the
+    // raw file is responsible for choosing the sync time so that this works.
+    //
+    // Assert-fails if a required header is missing, so make sure they aren't missing.
     double getStartTime() const {
       long synctime = getUnsignedInt("SYNCTIME", UNSIGNED_INT_NOT_PRESENT);
       assert(synctime != UNSIGNED_INT_NOT_PRESENT);
