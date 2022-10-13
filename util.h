@@ -152,7 +152,7 @@ namespace raw {
     rawspec_raw_get_str(header->buffer, "DEC_STR", "0.0", tmp, 80);
     header->dec = rawspec_raw_dmsstr_to_d(tmp);
 
-    imjd = header->getInt("STT_IMJD", 51545);
+    imjd = header->getInt("STT_IMJD", 0);
     smjd = header->getInt("STT_SMJD", 0);
     header->mjd = ((double)imjd) + ((double)smjd)/86400.0;
 

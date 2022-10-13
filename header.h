@@ -98,10 +98,12 @@ namespace raw {
     double dec;
 
     // The start time in MJD format.
+    // Zero if these headers are not present.
     // This is synthesized from the "STT_IMJD" and "STT_SMJD" FITS headers.
     // This is only accurate to the nearest second.
-    // It also (probably) indicates the start time of the overall file, rather than
-    // this particular block. So, maybe avoid using this.
+    // It may indicates the start time of the overall file, rather than
+    // this particular block. And some producers do not populate this field.
+    // So, avoid using this.
     double mjd;
 
     // The "BEAM_ID" FITS header.
